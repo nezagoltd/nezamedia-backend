@@ -50,7 +50,7 @@ Clone the Repo.
 8. Remember to run [PostgreSQL 9 or above](https://www.postgresql.org/) on your local machine or in a container
    
 ## Deployment
-- Heroku (Backend) : [Phone History Store Backend](https://nezamedia-backend-staging.herokuapp.com)
+- Heroku (Backend) : [NezaMedia Backend](https://nezamedia-backend-staging.herokuapp.com)
 
 ## Key contributor to development
 * [MUGIRASE Emmanuel (descholar)](https://github.com/descholar-ceo/)
