@@ -26,4 +26,19 @@ export default class CrudRepository {
     const savedData = await this.model.create(acceptedSave);
     return savedData;
   }
+
+  /**
+   * @param {object} whereCondition
+   * @returns {object} foundRes
+   * @method
+   * @description it gets whereCondition which should be an object containing the attribute of the
+   * table and its value, example if you want to get by phoneNumber, ypu will pass the
+   * whereCondition as this {phoneNumber:"+250722792371"} then it returns the object containing a
+   * user with that phoneNumber
+   */
+  getOneBy = async (whereCondition) => {
+    const inclusion = this.associateTable.map((table => ({ model: table })));
+    const foundRes = await this.model.findOne({ where: whereCondition, include: inclusion });
+    return foundRes;
+  }
 }
