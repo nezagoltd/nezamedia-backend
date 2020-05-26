@@ -2,7 +2,7 @@
 #
 node_modules
 yarn.lock
-yarn-error.json
+yarn-error.log
 coverage
 .nyc_output
 .env
