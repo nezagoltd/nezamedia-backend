@@ -33,6 +33,9 @@
   "scripts": {
     "create-db": "npx sequelize-cli db:create",
     "drop-db": "npx sequelize-cli db:drop",
+    "migrations":"npx sequelize-cli db:migrate",
+    "undo": "npx sequelize-cli db:migrate:undo:all",
+    "seed": "npx sequelize-cli db:seed:all",
     "dev": "nodemon --exec babel-node ./src/app.js",
     "start": "babel-node ./src/app.js",
     "test": "nyc mocha --require @babel/register ./tests/**/*.test.js --timeout 5000 --exit",
