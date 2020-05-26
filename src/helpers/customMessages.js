@@ -20,4 +20,9 @@ export default {
     emailEmptyErr: 'Enter your email please',
     passwordEmptyErr: 'Enter your password please',
   },
+  successMessages: {
+    signupSuccess: `Conglaturations, we are happy that you became a member of this global community,
+     We have just sent you an email which contains a verification link, your account will be valuable 
+     after you click on that link. Enjoy to navigate through NezaMedia`,
+  },
 };
