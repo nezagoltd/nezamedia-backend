@@ -42,7 +42,7 @@
     "seed": "npx sequelize-cli db:seed:all",
     "dev": "nodemon --exec babel-node ./src/app.js",
     "start": "babel-node ./src/app.js",
-    "pretest": "yarn run drop-db && yarn run create-db && yarn run migrations && yarn run seed",
+    "pretest": "yarn run drop-db && yarn run create-db && yarn run migrations",
     "test": "nyc mocha --require @babel/register ./tests/**/*.test.js --timeout 5000 --exit",
     "posttest": "yarn run undo",
     "coverage": "nyc report --reporter=text-lcov > coverage.lcov && codecov"
