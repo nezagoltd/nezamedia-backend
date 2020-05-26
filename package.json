@@ -27,6 +27,7 @@
   },
   "scripts": {
     "dev": "nodemon --exec babel-node ./src/app.js",
+    "start": "babel-node ./src/app.js",
     "test": "nyc mocha --require @babel/register ./tests/**/*.test.js --timeout 5000 --exit",
     "coverage":"nyc report --reporter=text-lcov > coverage.lcov && codecov"
   }
