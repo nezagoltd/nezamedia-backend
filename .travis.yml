@@ -12,6 +12,5 @@ script:
 notification:
   - email: false
 
-
 after_success:
   - yarn run coverage
