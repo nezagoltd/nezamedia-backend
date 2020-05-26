@@ -1,0 +1,26 @@
+{
+  "name": "nezamedia-backend",
+  "version": "1.0.0",
+  "description": "This is the nezago project of managing meadia (Videos, Audios, Documents). This part is for the backend.",
+  "main": "app.js",
+  "repository": "https://github.com/nezago/nezamedia-backend.git",
+  "author": "descholar",
+  "license": "MIT",
+  "devDependencies": {
+    "babel-eslint": "^10.1.0",
+    "eslint": "^6.8.0",
+    "eslint-config-airbnb-base": "^14.1.0",
+    "eslint-plugin-import": "^2.20.2"
+  },
+  "dependencies": {
+    "@babel/core": "^7.9.6",
+    "@babel/node": "^7.8.7",
+    "@babel/preset-env": "^7.9.6",
+    "dotenv": "^8.2.0",
+    "express": "^4.17.1",
+    "morgan": "^1.10.0"
+  },
+  "scripts": {
+    "dev": "nodemon --exec babel-node ./src/app.js"
+  }
+}
