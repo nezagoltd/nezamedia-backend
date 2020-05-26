@@ -19,5 +19,11 @@ export default {
     cityErr: 'City name should not be empty, should be a plain text no numbers, no special characters',
     emailEmptyErr: 'Enter your email please',
     passwordEmptyErr: 'Enter your password please',
+    userExistErr: 'Sorry! the email, or username you entered already exists',
+  },
+  successMessages: {
+    signupSuccess: `Conglaturations, we are happy that you became a member of this global community,
+     We have just sent you an email which contains a verification link, your account will be valuable 
+     after you click on that link. Enjoy to navigate through NezaMedia`,
   },
 };

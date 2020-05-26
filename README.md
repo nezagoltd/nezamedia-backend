@@ -62,3 +62,4 @@ Clone the Repo.
 | Endpoint | Request | Status | Description |
 | --- | --- | --- | --- |
 | / | GET | 200 OK | Helps users to access to the parent api for the whole application|
+| /users/signup | POST | 201 OK | Helps users to create their accounts, by signup|

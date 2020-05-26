@@ -20,10 +20,14 @@
   "dependencies": {
     "@babel/core": "^7.9.6",
     "@babel/node": "^7.8.7",
+    "@babel/plugin-proposal-class-properties": "^7.8.3",
     "@babel/preset-env": "^7.9.6",
     "@hapi/joi": "^17.1.1",
+    "bcrypt": "^4.0.1",
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
+    "jsonwebtoken": "^8.5.1",
+    "lodash": "^4.17.15",
     "morgan": "^1.10.0",
     "pg": "^8.2.1",
     "pg-hstore": "^2.3.3",
@@ -33,9 +37,14 @@
   "scripts": {
     "create-db": "npx sequelize-cli db:create",
     "drop-db": "npx sequelize-cli db:drop",
+    "migrations": "npx sequelize-cli db:migrate",
+    "undo": "npx sequelize-cli db:migrate:undo:all",
+    "seed": "npx sequelize-cli db:seed:all",
     "dev": "nodemon --exec babel-node ./src/app.js",
     "start": "babel-node ./src/app.js",
+    "pretest": "yarn run drop-db && yarn run create-db && yarn run migrations",
     "test": "nyc mocha --require @babel/register ./tests/**/*.test.js --timeout 5000 --exit",
+    "posttest": "yarn run undo",
     "coverage": "nyc report --reporter=text-lcov > coverage.lcov && codecov"
   }
 }
