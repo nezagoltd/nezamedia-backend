@@ -15,6 +15,9 @@ export default {
     ageErr: 'Age should be a number specifying your year of birth eg:1999',
     emailErr: 'Email should not be empty, and valid email address',
     sexErr: 'Sex should be male or female',
-    addressErr: 'Address should not be empty, in form of (country, city) eg: (USA, New York)',
+    countryErr: 'Country name should not be empty, should be a plain text no numbers, no special characters',
+    cityErr: 'City name should not be empty, should be a plain text no numbers, no special characters',
+    emailEmptyErr: 'Enter your email please',
+    passwordEmptyErr: 'Enter your password please',
   },
 };
