@@ -1,3 +1,9 @@
+import dotenv from 'dotenv';
+
+dotenv.config();
+
+const { APPLICATION_URL } = process.env;
+
 export default {
   landingPageMessages: {
     welcomeMessage: 'Welcome to NezaMedia, we make your life easier by saving, editing and securing your Videos, Audios, and documents.',
@@ -20,10 +26,35 @@ export default {
     emailEmptyErr: 'Enter your email please',
     passwordEmptyErr: 'Enter your password please',
     userExistErr: 'Sorry! the email, or username you entered already exists',
+    tokenEmptyErr: 'Enter the token please',
+    userNotFound: 'This user does not exists, please signup instead',
+    userAlreadyVerified: `You are aleardy verified, Login instead ${APPLICATION_URL}`,
   },
   successMessages: {
     signupSuccess: `Conglaturations, we are happy that you became a member of this global community,
      We have just sent you an email which contains a verification link, your account will be valuable 
      after you click on that link. Enjoy to navigate through NezaMedia`,
+    emailVerificationSuccess: `
+    Hooray! 
+    
+    You have succeesfully verified your account, start enjoy alot with us.
+
+    With us you will be able to get access to: 
+    * Various video Songs
+    * Various movies
+    * Audio songs
+    * Comic videos
+    * Books 
+    * And secure your digital properties
+    * 
+    * Click this link to login ${APPLICATION_URL}
+     `,
+  },
+  verificationEmail: {
+    subject: 'Account verification',
+    intro: 'Thank you for joing us today, you life is going to change in a positive way!',
+    instructions: 'To be able start using our services and favor, please click the button below to verify your account',
+    buttonText: 'Verify your account',
+    outro: 'If something is not clear, please do not hesitate to hit reply to this email, we would like to help you!',
   },
 };

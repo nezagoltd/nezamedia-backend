@@ -28,7 +28,9 @@
     "express": "^4.17.1",
     "jsonwebtoken": "^8.5.1",
     "lodash": "^4.17.15",
+    "mailgen": "^2.0.13",
     "morgan": "^1.10.0",
+    "nodemailer": "^6.4.6",
     "pg": "^8.2.1",
     "pg-hstore": "^2.3.3",
     "sequelize": "^5.21.10",
@@ -43,7 +45,7 @@
     "dev": "nodemon --exec babel-node ./src/app.js",
     "start": "babel-node ./src/app.js",
     "pretest": "yarn run drop-db && yarn run create-db && yarn run migrations",
-    "test": "nyc mocha --require @babel/register ./tests/**/*.test.js --timeout 5000 --exit",
+    "test": "nyc mocha --require @babel/register ./tests/**/*.test.js --timeout 10000 --exit",
     "posttest": "yarn run undo",
     "coverage": "nyc report --reporter=text-lcov > coverage.lcov && codecov"
   }

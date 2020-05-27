@@ -5,12 +5,13 @@ import ResponseHandlers from '../helpers/responseHandlers';
 import { generateToken } from '../helpers/tokenHandlers';
 import { hashPassword } from '../helpers/passwordHandlers';
 import customMessages from '../helpers/customMessages';
+import EmailSenderHandlers from '../helpers/emailSenderHandlers';
 
 const {
-  created,
+  created, ok,
 } = statusCodes;
 const {
-  signupSuccess,
+  signupSuccess, emailVerificationSuccess,
 } = customMessages.successMessages;
 
 /**
@@ -34,6 +35,20 @@ export default class UserController extends ResponseHandlers {
     this.res = res;
     req.body.password = hashPassword(req.body.password);
     const { dataValues } = await UserService.saveAll(req.body);
-    this.successResponse(this.res, created, signupSuccess, generateToken(dataValues), undefined);
+    const token = generateToken(dataValues);
+    await EmailSenderHandlers
+      .sendEmailVerification(token, `${req.body.firstName} ${req.body.lastName}`, req.body.email);
+    this.successResponse(this.res, created, signupSuccess, token, undefined);
   }
+
+  /**
+     * @param {object} req
+     * @param {object} res
+     * @returns {object} response to user
+     */
+    verifyUser = async (req, res) => {
+      this.res = res;
+      await UserService.updateOneBy({ isVerified: true }, { email: req.email });
+      this.successResponse(this.res, ok, emailVerificationSuccess, undefined, undefined);
+    }
 }

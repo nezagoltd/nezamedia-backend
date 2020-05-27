@@ -9,11 +9,16 @@ export default (sequelize, DataTypes) => {
     sex: DataTypes.STRING,
     city: DataTypes.STRING,
     country: DataTypes.STRING,
+    isVerified: DataTypes.BOOLEAN,
   }, {
     paranoid: true,
   });
   user.associate = (models) => {
-    // associations can be defined here
+    user.hasMany(models.emailVerification, {
+      foreignKey: 'emailSentTo',
+      onDelete: 'CASCADE',
+      onUpdate: 'CASCADE',
+    });
   };
   return user;
 };
