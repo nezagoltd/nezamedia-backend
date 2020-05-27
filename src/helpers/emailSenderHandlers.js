@@ -2,6 +2,7 @@ import nodemailer from 'nodemailer';
 import Mailgen from 'mailgen';
 import dotenv from 'dotenv';
 import customMessages from './customMessages';
+import EmailVerificationService from '../services/emailVerification.service';
 
 dotenv.config();
 
@@ -29,7 +30,6 @@ class EmailSenderHandlers {
      * @returns{*} sendsEmail
      */
     static sendEmailVerification = async (myToken, names, email) => {
-      // console.log('SERVICE', `"${NEZAMEDIA_EMAIL_SERVICE}"`);
       const mailGenerator = new Mailgen({
         theme: 'default',
         product: {
@@ -73,8 +73,12 @@ class EmailSenderHandlers {
         text: emailPlainText,
         html: emailHtml,
       };
-
       await transporter.sendMail(mailOptions);
+      await EmailVerificationService.saveAll({
+        emailSentTo: email,
+        emailSentFrom: NEZAMEDIA_EMAIL,
+        emailMessage: emailHtml,
+      });
     }
 }
 
