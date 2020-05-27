@@ -29,6 +29,7 @@ export default {
     tokenEmptyErr: 'Enter the token please',
     userNotFound: 'This user does not exists, please signup instead',
     userAlreadyVerified: `You are aleardy verified, Login instead ${APPLICATION_URL}`,
+    unkownCredentials: 'Your credentials do not match',
   },
   successMessages: {
     signupSuccess: `Conglaturations, we are happy that you became a member of this global community,
