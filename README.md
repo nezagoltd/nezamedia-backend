@@ -62,4 +62,5 @@ Clone the Repo.
 | Endpoint | Request | Status | Description |
 | --- | --- | --- | --- |
 | / | GET | 200 OK | Helps users to access to the parent api for the whole application|
-| /users/signup | POST | 201 OK | Helps users to create their accounts, by signup|
+| /users/signup | POST | 201 CREATED | Helps users to create their accounts, by signup|
+| /users/verify-user?token=token | GET | 200 OK | Verifies a user after a successful registration|
