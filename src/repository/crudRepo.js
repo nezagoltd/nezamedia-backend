@@ -41,4 +41,21 @@ export default class CrudRepository {
     const foundRes = await this.model.findOne({ where: whereCondition, include: inclusion });
     return foundRes;
   }
+
+  /**
+   * @param {object} dataToUpdate
+   * @param {object} whereCondition
+   * @returns {object} updatedData
+   * @method
+   * @description it gets the data to update as argument and where condition and it returns the
+   * updated data
+   */
+  updateOneBy = async (dataToUpdate, whereCondition) => {
+    const tableFields = Object.keys(this.model.rawAttributes);
+    const validDataToUpdate = removeUnexpectedInput(tableFields, dataToUpdate);
+    const updatedData = await this.model.update(validDataToUpdate, {
+      where: whereCondition, returning: true,
+    });
+    return updatedData;
+  }
 }

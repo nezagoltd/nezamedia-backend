@@ -7,10 +7,10 @@ import { hashPassword } from '../helpers/passwordHandlers';
 import customMessages from '../helpers/customMessages';
 
 const {
-  created,
+  created, ok,
 } = statusCodes;
 const {
-  signupSuccess,
+  signupSuccess, emailVerificationSuccess,
 } = customMessages.successMessages;
 
 /**
@@ -36,4 +36,15 @@ export default class UserController extends ResponseHandlers {
     const { dataValues } = await UserService.saveAll(req.body);
     this.successResponse(this.res, created, signupSuccess, generateToken(dataValues), undefined);
   }
+
+  /**
+     * @param {object} req
+     * @param {object} res
+     * @returns {object} response to user
+     */
+    verifyUser = async (req, res) => {
+      this.res = res;
+      await UserService.updateOneBy({ isVerified: true }, { email: req.email });
+      this.successResponse(this.res, ok, emailVerificationSuccess, undefined, undefined);
+    }
 }

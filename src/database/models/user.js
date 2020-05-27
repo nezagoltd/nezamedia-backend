@@ -15,7 +15,7 @@ export default (sequelize, DataTypes) => {
   });
   user.associate = (models) => {
     user.hasMany(models.emailVerification, {
-      foreignKey: 'emailSentFrom',
+      foreignKey: 'emailSentTo',
       onDelete: 'CASCADE',
       onUpdate: 'CASCADE',
     });

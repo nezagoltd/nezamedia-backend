@@ -6,7 +6,7 @@ export default (sequelize, DataTypes) => {
   }, {});
   emailVerification.associate = (models) => {
     emailVerification.belongsTo(models.user, {
-      foreignKey: 'emailSentFrom',
+      foreignKey: 'emailSentTo',
       onDelete: 'CASCADE',
       onUpdate: 'CASCADE',
     });
