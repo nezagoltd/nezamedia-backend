@@ -9,6 +9,7 @@ export default (sequelize, DataTypes) => {
     sex: DataTypes.STRING,
     city: DataTypes.STRING,
     country: DataTypes.STRING,
+    isVerified: DataTypes.BOOLEAN,
   }, {
     paranoid: true,
   });
