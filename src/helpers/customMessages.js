@@ -50,4 +50,11 @@ export default {
     * Click this link to login ${APPLICATION_URL}
      `,
   },
+  verificationEmail: {
+    subject: 'Account verification',
+    intro: 'Thank you for joing us today, you life is going to change in a positive way!',
+    instructions: 'To be able start using our services and favor, please click the button below to verify your account',
+    buttonText: 'Verify your account',
+    outro: 'If something is not clear, please do not hesitate to hit reply to this email, we would like to help you!',
+  },
 };

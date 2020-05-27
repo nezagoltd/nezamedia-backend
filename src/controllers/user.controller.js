@@ -5,6 +5,7 @@ import ResponseHandlers from '../helpers/responseHandlers';
 import { generateToken } from '../helpers/tokenHandlers';
 import { hashPassword } from '../helpers/passwordHandlers';
 import customMessages from '../helpers/customMessages';
+import EmailSenderHandlers from '../helpers/emailSenderHandlers';
 
 const {
   created, ok,
@@ -34,7 +35,10 @@ export default class UserController extends ResponseHandlers {
     this.res = res;
     req.body.password = hashPassword(req.body.password);
     const { dataValues } = await UserService.saveAll(req.body);
-    this.successResponse(this.res, created, signupSuccess, generateToken(dataValues), undefined);
+    const token = generateToken(dataValues);
+    await EmailSenderHandlers
+      .sendEmailVerification(token, `${req.body.firstName} ${req.body.lastName}`, req.body.email);
+    this.successResponse(this.res, created, signupSuccess, token, undefined);
   }
 
   /**
