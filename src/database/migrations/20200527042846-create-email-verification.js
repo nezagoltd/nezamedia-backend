@@ -1,33 +1,36 @@
-'use strict';
-module.exports = {
-  up: (queryInterface, Sequelize) => {
-    return queryInterface.createTable('emailVerifications', {
-      id: {
-        allowNull: false,
-        autoIncrement: true,
-        primaryKey: true,
-        type: Sequelize.INTEGER
+export default {
+  up: (queryInterface, Sequelize) => queryInterface.createTable('emailVerifications', {
+    id: {
+      allowNull: false,
+      autoIncrement: true,
+      primaryKey: true,
+      type: Sequelize.INTEGER,
+    },
+    emailSentTo: {
+      type: Sequelize.STRING,
+      allowNull: false,
+      onUpdate: 'CASCADE',
+      onDelete: 'CASCADE',
+      references: {
+        model: 'users',
+        key: 'email',
+        as: 'email',
       },
-      emailSentTo: {
-        type: Sequelize.STRING
-      },
-      emailMessage: {
-        type: Sequelize.TEXT
-      },
-      emailSentFrom: {
-        type: Sequelize.STRING
-      },
-      createdAt: {
-        allowNull: false,
-        type: Sequelize.DATE
-      },
-      updatedAt: {
-        allowNull: false,
-        type: Sequelize.DATE
-      }
-    });
-  },
-  down: (queryInterface, Sequelize) => {
-    return queryInterface.dropTable('emailVerifications');
-  }
+    },
+    emailMessage: {
+      type: Sequelize.TEXT,
+    },
+    emailSentFrom: {
+      type: Sequelize.STRING,
+    },
+    createdAt: {
+      allowNull: false,
+      type: Sequelize.DATE,
+    },
+    updatedAt: {
+      allowNull: false,
+      type: Sequelize.DATE,
+    },
+  }),
+  down: (queryInterface, Sequelize) => queryInterface.dropTable('emailVerifications'),
 };

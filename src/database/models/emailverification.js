@@ -5,7 +5,11 @@ export default (sequelize, DataTypes) => {
     emailSentFrom: DataTypes.STRING,
   }, {});
   emailVerification.associate = (models) => {
-    // associations can be defined here
+    emailVerification.belongsTo(models.user, {
+      foreignKey: 'emailSentFrom',
+      onDelete: 'CASCADE',
+      onUpdate: 'CASCADE',
+    });
   };
   return emailVerification;
 };

@@ -14,7 +14,11 @@ export default (sequelize, DataTypes) => {
     paranoid: true,
   });
   user.associate = (models) => {
-    // associations can be defined here
+    user.hasMany(models.emailVerification, {
+      foreignKey: 'emailSentFrom',
+      onDelete: 'CASCADE',
+      onUpdate: 'CASCADE',
+    });
   };
   return user;
 };
