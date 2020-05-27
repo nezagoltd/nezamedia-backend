@@ -1,9 +1,9 @@
 export default {
   signupData: {
     signupValidData: {
-      firstName: 'Neza',
+      firstName: 'Test',
       lastName: 'Media',
-      email: 'nezamedia@gmail.com',
+      email: 'recruit.neza@gmail.com',
       username: 'nezatest',
       password: 'NezaMedia1.',
       age: 25,
@@ -15,7 +15,7 @@ export default {
       firstName: 'Neza',
       lastName: 'Media',
       nickname: 'nezago',
-      email: 'nezamediatwo@gmail.com',
+      email: 'neza@gmail.com',
       username: 'nezatesttwo',
       password: 'NezaMedia1.',
       age: 25,
@@ -43,5 +43,8 @@ export default {
       city: 'kigali',
       country: 'rwanda',
     },
+  },
+  verifyAccountData: {
+    fakeToken: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c',
   },
 };

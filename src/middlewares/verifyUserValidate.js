@@ -30,11 +30,11 @@ class ValidateUserVerification extends ResponseHandlers {
  */
 validateVerifyUser = async (req, res, next) => {
   this.res = res;
-  const token = req.query;
+  const { token } = req.query;
 
   if (token) {
     try {
-      const decodedToken = verifyToken(token.token);
+      const decodedToken = verifyToken(token);
       const userFromDb = await UserService.getOneBy({ email: decodedToken.email });
       if (userFromDb) {
         const { dataValues } = userFromDb;
