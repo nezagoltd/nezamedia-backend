@@ -13,11 +13,11 @@ const {
   conflict,
   created, ok,
   unAuthorized,
-  forbidden,
+  forbidden, notFound,
 } = statusCodes;
 const {
   signupSuccess,
-  emailVerificationSuccess,
+  emailVerificationSuccess, verificationEmailResentSuccess,
 } = customMessages.successMessages;
 const {
   emailErr,
@@ -28,6 +28,8 @@ const {
   unkownCredentials,
   unVerifiedAccount,
   passwordEmptyErr,
+  userAlreadyVerifiedWhileAskedForLinkResend,
+  userNotFound,
 } = customMessages.errorMessages;
 const {
   signupValidData,
@@ -264,6 +266,61 @@ describe('Login tests', () => {
         expect(res.body).to.have.property('error');
         expect(res.body.error).to.be.a('string');
         expect(res.body.error).to.equal(passwordEmptyErr);
+        done();
+      });
+  });
+});
+
+describe('Resend verification email tests', () => {
+  it('Will resend a verification email', (done) => {
+    chai.request(server)
+      .get(`/api/users/resend-verification-email?email=${signupValidDataWithUnnecessaryData.email}`)
+      .end((err, res) => {
+        if (err) done(err);
+        expect(res).to.have.status(ok);
+        expect(res.body).to.be.an('object');
+        expect(res.body).to.have.property('message');
+        expect(res.body.message).to.be.a('string');
+        expect(res.body.message).to.equal(verificationEmailResentSuccess);
+        done();
+      });
+  });
+  it('Will not resend a verification email because the email is empty', (done) => {
+    chai.request(server)
+      .get('/api/users/resend-verification-email')
+      .end((err, res) => {
+        if (err) done(err);
+        expect(res).to.have.status(badRequest);
+        expect(res.body).to.be.an('object');
+        expect(res.body).to.have.property('error');
+        expect(res.body.error).to.be.a('string');
+        expect(res.body.error).to.equal(emailErr);
+        done();
+      });
+  });
+  it('Will not resend a verification email because the user is already verified', (done) => {
+    chai.request(server)
+      .get(`/api/users/resend-verification-email?email=${signupValidData.email}`)
+      .end((err, res) => {
+        if (err) done(err);
+        expect(res).to.have.status(badRequest);
+        expect(res.body).to.be.an('object');
+        expect(res.body).to.have.property('error');
+        expect(res.body.error).to.be.a('string');
+        expect(res.body.error).to.equal(userAlreadyVerifiedWhileAskedForLinkResend);
+        done();
+      });
+  });
+  it('Will not resend a verification email because the user is already verified', (done) => {
+    chai.request(server)
+      .get('/api/users/resend-verification-email?email=cool@neza.com')
+      .end((err, res) => {
+        if (err) done(err);
+        expect(res).to.have.status(notFound);
+        expect(res.body).to.be.an('object');
+        expect(res.body).to.have.property('error');
+        expect(res.body.error).to.be.a('string');
+        expect(res.body.error).to.equal(userNotFound);
         done();
       });
   });

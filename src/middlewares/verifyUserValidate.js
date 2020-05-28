@@ -77,21 +77,17 @@ validateResendVerificationEMail = async (req, res, next) => {
   const { email } = req.query;
 
   if (EMAIL_REGEX.test(email)) {
-    try {
-      const userFromDb = await UserService.getOneBy({ email });
-      if (userFromDb) {
-        const { dataValues } = userFromDb;
-        if (dataValues.isVerified) {
-          this.errorResponse(this.res, badRequest, userAlreadyVerifiedWhileAskedForLinkResend);
-        } else {
-          req.userRequestedResendVerificationEmail = dataValues;
-          next();
-        }
+    const userFromDb = await UserService.getOneBy({ email });
+    if (userFromDb) {
+      const { dataValues } = userFromDb;
+      if (dataValues.isVerified) {
+        this.errorResponse(this.res, badRequest, userAlreadyVerifiedWhileAskedForLinkResend);
       } else {
-        this.errorResponse(this.res, notFound, userNotFound);
+        req.userRequestedResendVerificationEmail = dataValues;
+        next();
       }
-    } catch (err) {
-      this.errorResponse(this.res, badRequest, err);
+    } else {
+      this.errorResponse(this.res, notFound, userNotFound);
     }
   } else {
     this.errorResponse(this.res, badRequest, emailErr);
