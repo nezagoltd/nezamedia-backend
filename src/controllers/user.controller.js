@@ -11,7 +11,7 @@ const {
   created, ok,
 } = statusCodes;
 const {
-  signupSuccess, emailVerificationSuccess,
+  signupSuccess, emailVerificationSuccess, verificationEmailResentSuccess,
 } = customMessages.successMessages;
 
 /**
@@ -62,7 +62,24 @@ export default class UserController extends ResponseHandlers {
   retrieveUser = async (req, res) => {
     this.res = res;
     const { gottenUser } = req;
-    const userToSend = _.omit(gottenUser, 'devices', 'deletedAt', 'createdAt', 'updatedAt');
+    const userToSend = _.omit(gottenUser, 'password');
     this.successResponse(this.res, ok, undefined, generateToken(userToSend), undefined);
+  }
+
+  /**
+     * @param {object} req
+     * @param {object} res
+     * @method
+     * @returns {object} response to user
+     * @description it sends an authentication token to user if they are authenticated
+     */
+  resendVerificationEmail = async (req, res) => {
+    this.res = res;
+    const { userRequestedResendVerificationEmail } = req;
+    const userToSend = _.omit(userRequestedResendVerificationEmail, 'password');
+    const token = generateToken(userToSend);
+    await EmailSenderHandlers
+      .sendEmailVerification(token, `${userToSend.firstName} ${userToSend.lastName}`, userToSend.email);
+    this.successResponse(this.res, ok, verificationEmailResentSuccess, undefined, undefined);
   }
 }
