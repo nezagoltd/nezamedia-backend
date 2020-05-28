@@ -1,9 +1,3 @@
-import dotenv from 'dotenv';
-
-dotenv.config();
-
-const { APPLICATION_URL } = process.env;
-
 export default {
   landingPageMessages: {
     welcomeMessage: 'Welcome to NezaMedia, we make your life easier by saving, editing and securing your Videos, Audios, and documents.',
@@ -28,7 +22,7 @@ export default {
     userExistErr: 'Sorry! the email, or username you entered already exists',
     tokenEmptyErr: 'Enter the token please',
     userNotFound: 'This user does not exists, please signup instead',
-    userAlreadyVerified: `You are aleardy verified, Login instead ${APPLICATION_URL}`,
+    userAlreadyVerified: 'You are already verified, Login instead',
     unkownCredentials: 'Your credentials do not match',
     unVerifiedAccount: 'Your account is not verified yet, please check your email as soon as possible to verify it',
   },
@@ -49,7 +43,7 @@ export default {
     * Books 
     * And secure your digital properties
     * 
-    * Click this link to login ${APPLICATION_URL}
+    * Login and enjoy using our services
      `,
   },
   verificationEmail: {
