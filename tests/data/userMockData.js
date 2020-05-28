@@ -47,4 +47,10 @@ export default {
   verifyAccountData: {
     fakeToken: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c',
   },
+  loginData: {
+    loginVerifiedAcc: {
+      email: 'recruit.neza@gmail.com',
+      password: 'NezaMedia1.',
+    },
+  },
 };
