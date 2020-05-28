@@ -23,6 +23,7 @@ export default {
     tokenEmptyErr: 'Enter the token please',
     userNotFound: 'This user does not exists, please signup instead',
     userAlreadyVerified: 'You are already verified, Login instead',
+    userAlreadyVerifiedWhileAskedForLinkResend: 'You are already verified, Login instead, or if you have forgotten your credentials, request for password reset',
     unkownCredentials: 'Your credentials do not match',
     unVerifiedAccount: 'Your account is not verified yet, please check your email as soon as possible to verify it',
   },
@@ -45,6 +46,7 @@ export default {
     * 
     * Login and enjoy using our services
      `,
+    verificationEmailResentSuccess: 'Hooray! We have just re-sent you the verification email, please check your email and verify your account',
   },
   verificationEmail: {
     subject: 'Account verification',
