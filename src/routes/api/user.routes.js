@@ -12,6 +12,6 @@ const { checkLoginCredentials } = new ValidateLogin();
 
 userRouter.post('/signup', validateSignupData, saveNewUser);
 userRouter.get('/verify-user', validateVerifyUser, verifyUser);
-userRouter.get('/login', checkLoginCredentials, retrieveUser);
+userRouter.post('/login', checkLoginCredentials, retrieveUser);
 
 export default userRouter;

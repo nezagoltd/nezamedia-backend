@@ -80,7 +80,8 @@ class Validators extends ResponseHandlers {
    */
   validateUserLoginData = (userData) => {
     const schema = Joi.object({
-      email: Joi.string().required().messages(createValidationErrorMessage('string', emailEmptyErr)),
+      email: Joi.string().optional().messages(createValidationErrorMessage('string', emailEmptyErr)),
+      username: Joi.string().optional().messages(createValidationErrorMessage('string', usernameErr)),
       password: Joi.string().required().messages(createValidationErrorMessage('string', passwordEmptyErr)),
     });
     return schema.validate(userData, { abortEarly: false, allowUnknown: false });

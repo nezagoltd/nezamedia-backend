@@ -30,6 +30,7 @@ export default {
     userNotFound: 'This user does not exists, please signup instead',
     userAlreadyVerified: `You are aleardy verified, Login instead ${APPLICATION_URL}`,
     unkownCredentials: 'Your credentials do not match',
+    unVerifiedAccount: 'Your account is not verified yet, please check your email as soon as possible to verify it',
   },
   successMessages: {
     signupSuccess: `Conglaturations, we are happy that you became a member of this global community,

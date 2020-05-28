@@ -5,8 +5,10 @@ import statusCodes from '../helpers/statusCodes';
 import customMessages from '../helpers/customMessages';
 import { verifyPassword } from '../helpers/passwordHandlers';
 
-const { badRequest, unAuthorized } = statusCodes;
-const { unkownCredentials } = customMessages;
+const { badRequest, unAuthorized, forbidden } = statusCodes;
+const { unkownCredentials, unVerifiedAccount } = customMessages.errorMessages;
+const EMAIL_REGEX = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+
 /**
  * @class
  * @classdesc this class contains all methods of validating login data
@@ -32,17 +34,26 @@ class ValidateLogin extends Validators {
       this.res = res;
       const { error } = this.validateUserLoginData(req.body);
       if (!error) {
-        const foundUser = await UserService.getOneBy({
-          [Op.or]: [{ email: req.body.email }, { username: req.body.username }],
-        });
+        const identifier = req.body.username ? req.body.username : req.body.email;
+        let foundUser;
+        if (EMAIL_REGEX.test(identifier)) {
+          foundUser = await UserService.getOneBy({ email: identifier });
+        } else {
+          foundUser = await UserService.getOneBy({ username: identifier });
+        }
+
         if (foundUser) {
           const { dataValues } = foundUser;
-          const isPasswordValid = verifyPassword(req.body.password, dataValues.password);
-          if (isPasswordValid) {
-            req.gottenUser = dataValues;
-            next();
+          if (dataValues.isVerified) {
+            const isPasswordValid = verifyPassword(req.body.password, dataValues.password);
+            if (isPasswordValid) {
+              req.gottenUser = dataValues;
+              next();
+            } else {
+              this.errorResponse(this.res, unAuthorized, unkownCredentials);
+            }
           } else {
-            this.errorResponse(this.res, unAuthorized, unkownCredentials);
+            this.errorResponse(this.res, forbidden, unVerifiedAccount);
           }
         } else {
           this.errorResponse(this.res, unAuthorized, unkownCredentials);
