@@ -9,7 +9,11 @@ import mockData from '../data/userMockData';
 chai.use(chaiHttp);
 
 const {
-  badRequest, conflict, created, ok, unAuthorized, forbidden,
+  badRequest,
+  conflict,
+  created, ok,
+  unAuthorized,
+  forbidden,
 } = statusCodes;
 const {
   signupSuccess,
@@ -20,7 +24,10 @@ const {
   usernameErr,
   userExistErr,
   userAlreadyVerified,
-  tokenEmptyErr, unkownCredentials, unVerifiedAccount, passwordEmptyErr,
+  tokenEmptyErr,
+  unkownCredentials,
+  unVerifiedAccount,
+  passwordEmptyErr,
 } = customMessages.errorMessages;
 const {
   signupValidData,
