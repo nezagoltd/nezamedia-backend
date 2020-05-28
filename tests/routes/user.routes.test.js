@@ -9,13 +9,25 @@ import mockData from '../data/userMockData';
 chai.use(chaiHttp);
 
 const {
-  badRequest, conflict, created, ok,
+  badRequest,
+  conflict,
+  created, ok,
+  unAuthorized,
+  forbidden,
 } = statusCodes;
 const {
-  signupSuccess, emailVerificationSuccess,
+  signupSuccess,
+  emailVerificationSuccess,
 } = customMessages.successMessages;
 const {
-  emailErr, usernameErr, userExistErr, userAlreadyVerified, tokenEmptyErr,
+  emailErr,
+  usernameErr,
+  userExistErr,
+  userAlreadyVerified,
+  tokenEmptyErr,
+  unkownCredentials,
+  unVerifiedAccount,
+  passwordEmptyErr,
 } = customMessages.errorMessages;
 const {
   signupValidData,
@@ -25,6 +37,8 @@ const {
 } = mockData.signupData;
 
 const { fakeToken } = mockData.verifyAccountData;
+
+const { loginVerifiedAcc } = mockData.loginData;
 
 let userToken;
 
@@ -157,6 +171,99 @@ describe('User verfication', () => {
         expect(res).to.have.status(badRequest);
         expect(res.body).to.be.an('object');
         expect(res.body).to.have.property('error');
+        done();
+      });
+  });
+});
+
+describe('Login tests', () => {
+  it('Will login a verified user using email to login', (done) => {
+    chai.request(server)
+      .post('/api/users/login')
+      .send(loginVerifiedAcc)
+      .end((err, res) => {
+        if (err) done(err);
+        expect(res).to.have.status(ok);
+        expect(res.body).to.be.an('object');
+        expect(res.body).to.have.property('token');
+        expect(res.body.token).to.be.a('string');
+        done();
+      });
+  });
+  it('Will login a verified user using username to login', (done) => {
+    chai.request(server)
+      .post('/api/users/login')
+      .send({ username: signupValidData.username, password: signupValidData.password })
+      .end((err, res) => {
+        if (err) done(err);
+        expect(res).to.have.status(ok);
+        expect(res.body).to.be.an('object');
+        expect(res.body).to.have.property('token');
+        expect(res.body.token).to.be.a('string');
+        done();
+      });
+  });
+  it('Will not login the user because the username and password do not match at all', (done) => {
+    chai.request(server)
+      .post('/api/users/login')
+      .send({ username: signupValidData.username, password: 'signupValidData.password' })
+      .end((err, res) => {
+        if (err) done(err);
+        expect(res).to.have.status(unAuthorized);
+        expect(res.body).to.be.an('object');
+        expect(res.body).to.have.property('error');
+        expect(res.body.error).to.be.a('string');
+        expect(res.body.error).to.equal(unkownCredentials);
+        done();
+      });
+  });
+  it('Will not login a user because the account trying to login is not verified yet', (done) => {
+    chai.request(server)
+      .post('/api/users/login')
+      .send({
+        email: signupValidDataWithUnnecessaryData.email,
+        password: signupValidDataWithUnnecessaryData.password,
+      })
+      .end((err, res) => {
+        if (err) done(err);
+        expect(res).to.have.status(forbidden);
+        expect(res.body).to.be.an('object');
+        expect(res.body).to.have.property('error');
+        expect(res.body.error).to.be.a('string');
+        expect(res.body.error).to.equal(unVerifiedAccount);
+        done();
+      });
+  });
+  it('Will not login a user because the username sent does not exist', (done) => {
+    chai.request(server)
+      .post('/api/users/login')
+      .send({
+        username: 'signupValidDataWithUnnecessaryDataemail',
+        password: signupValidDataWithUnnecessaryData.password,
+      })
+      .end((err, res) => {
+        if (err) done(err);
+        expect(res).to.have.status(unAuthorized);
+        expect(res.body).to.be.an('object');
+        expect(res.body).to.have.property('error');
+        expect(res.body.error).to.be.a('string');
+        expect(res.body.error).to.equal(unkownCredentials);
+        done();
+      });
+  });
+  it('Will not login a user because the password is missing', (done) => {
+    chai.request(server)
+      .post('/api/users/login')
+      .send({
+        username: 'signupValidDataWithUnnecessaryDataemail',
+      })
+      .end((err, res) => {
+        if (err) done(err);
+        expect(res).to.have.status(badRequest);
+        expect(res.body).to.be.an('object');
+        expect(res.body).to.have.property('error');
+        expect(res.body.error).to.be.a('string');
+        expect(res.body.error).to.equal(passwordEmptyErr);
         done();
       });
   });

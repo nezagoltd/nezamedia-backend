@@ -51,4 +51,18 @@ export default class UserController extends ResponseHandlers {
       await UserService.updateOneBy({ isVerified: true }, { email: req.email });
       this.successResponse(this.res, ok, emailVerificationSuccess, undefined, undefined);
     }
+
+    /**
+     * @param {object} req
+     * @param {object} res
+     * @method
+     * @returns {object} response to user
+     * @description it sends an authentication token to user if they are authenticated
+     */
+  retrieveUser = async (req, res) => {
+    this.res = res;
+    const { gottenUser } = req;
+    const userToSend = _.omit(gottenUser, 'devices', 'deletedAt', 'createdAt', 'updatedAt');
+    this.successResponse(this.res, ok, undefined, generateToken(userToSend), undefined);
+  }
 }
