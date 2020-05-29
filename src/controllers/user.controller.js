@@ -15,9 +15,10 @@ const {
   emailVerificationSuccess,
   verificationEmailResentSuccess,
   passwordResetRequestEmailSent,
+  passwordResetSuccess,
 } = customMessages.successMessages;
 
-const { verificationEmail, passwordResetRequestEmail } = customMessages;
+const { verificationEmail, passwordResetRequestEmail, passwordResetSuccessEmail } = customMessages;
 
 /**
  * @description this class user controller will work with req, and response to interact with db
@@ -41,8 +42,9 @@ export default class UserController extends ResponseHandlers {
     req.body.password = hashPassword(req.body.password);
     const { dataValues } = await UserService.saveAll(req.body);
     const token = generateToken(dataValues);
+    const link = `/api/users/verify-user?token=${token}`;
     await EmailSenderHandlers
-      .sendAnyEmail(token, `${req.body.firstName} ${req.body.lastName}`, req.body.email, verificationEmail);
+      .sendAnyEmail(link, `${req.body.firstName} ${req.body.lastName}`, req.body.email, verificationEmail);
     this.successResponse(this.res, created, signupSuccess, token, undefined);
   }
 
@@ -83,8 +85,9 @@ export default class UserController extends ResponseHandlers {
     const { userRequestedResendVerificationEmail } = req;
     const userToSend = _.omit(userRequestedResendVerificationEmail, 'password');
     const token = generateToken(userToSend);
+    const link = `/api/users/verify-user?token=${token}`;
     await EmailSenderHandlers
-      .sendAnyEmail(token, `${userToSend.firstName} ${userToSend.lastName}`, userToSend.email, verificationEmail);
+      .sendAnyEmail(link, `${userToSend.firstName} ${userToSend.lastName}`, userToSend.email, verificationEmail);
     this.successResponse(this.res, ok, verificationEmailResentSuccess, undefined, undefined);
   }
 
@@ -97,12 +100,29 @@ export default class UserController extends ResponseHandlers {
      */
   passwordResetRequest = async (req, res) => {
     this.res = res;
-    const { email } = req;
-    const userFormDb = await UserService.getOneBy({ email });
-    const userToSend = _.omit(userFormDb, 'password');
+    const { userFromDb } = req;
+    const userToSend = _.omit(userFromDb, 'password');
     const token = generateToken(userToSend);
+    const link = `/api/users/reset-password?token=${token}`;
     await EmailSenderHandlers
-      .sendAnyEmail(token, `${userToSend.firstName} ${userToSend.lastName}`, userToSend.email, passwordResetRequestEmail);
+      .sendAnyEmail(link, `${userToSend.firstName} ${userToSend.lastName}`, userToSend.email, passwordResetRequestEmail);
     this.successResponse(this.res, ok, passwordResetRequestEmailSent, token, undefined);
+  }
+
+  /**
+     * @param {object} req
+     * @param {object} res
+     * @method
+     * @returns {object} response to user
+     * @description it sends an authentication token to user if they are authenticated
+     */
+  passwordUpdate = async (req, res) => {
+    this.res = res;
+    const { userId, newPassword, user } = req;
+    await UserService.updateOneBy({ password: newPassword }, { id: userId });
+    const linkToLogin = '/api/users/login';
+    await EmailSenderHandlers
+      .sendAnyEmail(linkToLogin, `${user.firstName} ${user.lastName}`, user.email, passwordResetSuccessEmail);
+    this.successResponse(this.res, ok, passwordResetSuccess, undefined, undefined);
   }
 }

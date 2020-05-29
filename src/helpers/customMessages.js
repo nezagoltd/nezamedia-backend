@@ -26,6 +26,7 @@ export default {
     userAlreadyVerifiedWhileAskedForLinkResend: 'You are already verified, Login instead, or if you have forgotten your credentials, request for password reset',
     unkownCredentials: 'Your credentials do not match',
     unVerifiedAccount: 'Your account is not verified yet, please check your email as soon as possible to verify it',
+    emailOrUsernameRequired: 'Enter your email or your username',
   },
   successMessages: {
     signupSuccess: `Conglaturations, we are happy that you became a member of this global community,
@@ -48,13 +49,14 @@ export default {
      `,
     verificationEmailResentSuccess: 'Hooray! We have just re-sent you the verification email, please check your email and verify your account',
     passwordResetRequestEmailSent: 'We have just sent you an email containing you password reset link, check it and click the link',
+    passwordResetSuccess: 'Hooray! Your password has been successfully changed, please check your email and follow the instructions',
   },
   verificationEmail: {
     subject: 'Account verification',
     intro: 'Thank you for joing us today, you life is going to change in a positive way!',
     instructions: 'To be able start using our services and favor, please click the button below to verify your account',
     buttonText: 'Verify your account',
-    buttonColor: '#FF585B',
+    buttonColor: '#00A799',
     outro: 'If something is not clear, please do not hesitate to hit reply to this email, we would like to help you!',
   },
   passwordResetRequestEmail: {
@@ -63,6 +65,14 @@ export default {
     instructions: 'Click the button below to reset your password,',
     buttonText: 'Reset your passwordt',
     buttonColor: '#FF585B',
+    outro: 'If you think this email is sent by mistake, do not hesitate to hit reply, and give us feedback',
+  },
+  passwordResetSuccessEmail: {
+    subject: 'Password reset success!',
+    intro: 'Your password has been successfully changed,',
+    instructions: 'Click the button below to login with your new password,',
+    buttonText: 'Login',
+    buttonColor: '#7268A6',
     outro: 'If you think this email is sent by mistake, do not hesitate to hit reply, and give us feedback',
   },
 };

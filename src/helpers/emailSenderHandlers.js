@@ -20,14 +20,14 @@ const {
 class EmailSenderHandlers {
   /**
      * @method
-     * @param{string} myToken
+     * @param{string} link
      * @param{string} names
      * @param{string} email
      * @param{object} emailContent
      * @returns{*} sendsEmail
      *
      */
-    static sendAnyEmail = async (myToken, names, email, emailContent) => {
+    static sendAnyEmail = async (link, names, email, emailContent) => {
       const mailGenerator = new Mailgen({
         theme: 'default',
         product: {
@@ -49,7 +49,7 @@ class EmailSenderHandlers {
             button: {
               color: buttonColor,
               text: buttonText,
-              link: `${APPLICATION_URL}/api/users/verify-user?token=${myToken}`,
+              link: `${APPLICATION_URL}${link}`,
             },
           },
           outro,
