@@ -27,6 +27,7 @@ export default {
     unkownCredentials: 'Your credentials do not match',
     unVerifiedAccount: 'Your account is not verified yet, please check your email as soon as possible to verify it',
     emailOrUsernameRequired: 'Enter your email or your username',
+    resetPasswordLinkExpired: 'The reset password link has been expired, please re-request for password reset',
   },
   successMessages: {
     signupSuccess: `Conglaturations, we are happy that you became a member of this global community,
@@ -48,7 +49,7 @@ export default {
     * Login and enjoy using our services
      `,
     verificationEmailResentSuccess: 'Hooray! We have just re-sent you the verification email, please check your email and verify your account',
-    passwordResetRequestEmailSent: 'We have just sent you an email containing you password reset link, check it and click the link',
+    passwordResetRequestEmailSent: 'We have just sent you an email containing you password reset link, check it and click the link, that link is valid for 24 hours',
     passwordResetSuccess: 'Hooray! Your password has been successfully changed, please check your email and follow the instructions',
   },
   verificationEmail: {
@@ -62,7 +63,7 @@ export default {
   passwordResetRequestEmail: {
     subject: 'Password reset request',
     intro: 'You have just requested to reset your password,',
-    instructions: 'Click the button below to reset your password,',
+    instructions: 'Click the button below to reset your password, the link is valid for 24 hours since the time you received it',
     buttonText: 'Reset your passwordt',
     buttonColor: '#FF585B',
     outro: 'If you think this email is sent by mistake, do not hesitate to hit reply, and give us feedback',

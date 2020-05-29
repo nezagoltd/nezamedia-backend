@@ -20,6 +20,7 @@ const {
   countryErr,
   emailEmptyErr,
   passwordEmptyErr,
+  tokenEmptyErr,
 } = customMessages.errorMessages;
 
 /**
@@ -85,6 +86,20 @@ class Validators extends ResponseHandlers {
       password: Joi.string().required().messages(createValidationErrorMessage('string', passwordEmptyErr)),
     });
     return schema.validate(userData, { abortEarly: false, allowUnknown: false });
+  }
+
+  /**
+   * @param {object} resetPasswodData
+   * @returns {object} errors
+   * @method
+   * @description it returns error if there are any
+   */
+  validateResetPassword = (resetPasswodData) => {
+    const schema = Joi.object({
+      token: Joi.string().required().messages(createValidationErrorMessage('string', tokenEmptyErr)),
+      password: this.clearToValidate(PASSWORD_REGEX, passwordErr, undefined),
+    });
+    return schema.validate(resetPasswodData, { abortEarly: false, allowUnknown: false });
   }
 }
 

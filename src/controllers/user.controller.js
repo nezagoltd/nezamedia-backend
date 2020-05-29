@@ -118,11 +118,11 @@ export default class UserController extends ResponseHandlers {
      */
   passwordUpdate = async (req, res) => {
     this.res = res;
-    const { userId, newPassword, user } = req;
-    await UserService.updateOneBy({ password: newPassword }, { id: userId });
+    const { newPassword, userFromDb } = req;
+    await UserService.updateOneBy({ password: hashPassword(newPassword) }, { id: userFromDb.id });
     const linkToLogin = '/api/users/login';
     await EmailSenderHandlers
-      .sendAnyEmail(linkToLogin, `${user.firstName} ${user.lastName}`, user.email, passwordResetSuccessEmail);
+      .sendAnyEmail(linkToLogin, `${userFromDb.firstName} ${userFromDb.lastName}`, userFromDb.email, passwordResetSuccessEmail);
     this.successResponse(this.res, ok, passwordResetSuccess, undefined, undefined);
   }
 }
