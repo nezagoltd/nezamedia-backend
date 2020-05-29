@@ -17,7 +17,10 @@ const {
 } = statusCodes;
 const {
   signupSuccess,
-  emailVerificationSuccess, verificationEmailResentSuccess,
+  emailVerificationSuccess,
+  verificationEmailResentSuccess,
+  passwordResetRequestEmailSent,
+  passwordResetSuccess,
 } = customMessages.successMessages;
 const {
   emailErr,
@@ -30,6 +33,9 @@ const {
   passwordEmptyErr,
   userAlreadyVerifiedWhileAskedForLinkResend,
   userNotFound,
+  emailOrUsernameRequired,
+  resetPasswordLinkExpired,
+  passwordErr,
 } = customMessages.errorMessages;
 const {
   signupValidData,
@@ -43,6 +49,7 @@ const { fakeToken } = mockData.verifyAccountData;
 const { loginVerifiedAcc } = mockData.loginData;
 
 let userToken;
+let resetPasswordToken;
 
 describe('Signup tests', () => {
   it('Will create a new user, expect it to return an object with status code of 201, and response body containing a token', (done) => {
@@ -321,6 +328,113 @@ describe('Resend verification email tests', () => {
         expect(res.body).to.have.property('error');
         expect(res.body.error).to.be.a('string');
         expect(res.body.error).to.equal(userNotFound);
+        done();
+      });
+  });
+});
+
+describe('Reset Password tests', () => {
+  it('Will request the reset password, using email', (done) => {
+    chai.request(server)
+      .post('/api/users/reset-password-request')
+      .send({ email: signupValidData.email })
+      .end((err, res) => {
+        if (err) done(err);
+        resetPasswordToken = res.body.token;
+        expect(res).to.have.status(ok);
+        expect(res.body).to.be.an('object');
+        expect(res.body).to.have.property('message');
+        expect(res.body).to.have.property('token');
+        expect(res.body.token).to.be.a('string');
+        expect(res.body.message).to.be.a('string');
+        expect(res.body.message).to.equal(passwordResetRequestEmailSent);
+        done();
+      });
+  });
+  it('Will request the reset password, using username', (done) => {
+    chai.request(server)
+      .post('/api/users/reset-password-request')
+      .send({ email: signupValidData.username })
+      .end((err, res) => {
+        if (err) done(err);
+        expect(res).to.have.status(ok);
+        expect(res.body).to.be.an('object');
+        expect(res.body).to.have.property('message');
+        expect(res.body.message).to.be.a('string');
+        expect(res.body.message).to.equal(passwordResetRequestEmailSent);
+        done();
+      });
+  });
+  it('Will not request the reset password, because user does not exist', (done) => {
+    chai.request(server)
+      .post('/api/users/reset-password-request')
+      .send({ email: 'cool@neza.nez' })
+      .end((err, res) => {
+        if (err) done(err);
+        expect(res).to.have.status(notFound);
+        expect(res.body).to.be.an('object');
+        expect(res.body).to.have.property('error');
+        expect(res.body.error).to.be.a('string');
+        expect(res.body.error).to.equal(userNotFound);
+        done();
+      });
+  });
+  it('Will not request the reset password, because email is not sent', (done) => {
+    chai.request(server)
+      .post('/api/users/reset-password-request')
+      .send({ })
+      .end((err, res) => {
+        if (err) done(err);
+        expect(res).to.have.status(badRequest);
+        expect(res.body).to.be.an('object');
+        expect(res.body).to.have.property('error');
+        expect(res.body.error).to.be.a('string');
+        expect(res.body.error).to.equal(emailOrUsernameRequired);
+        done();
+      });
+  });
+
+  it('Will reset password,', (done) => {
+    chai.request(server)
+      .patch(`/api/users/reset-password/${resetPasswordToken}`)
+      .send({ password: 'Nezamedia1.' })
+      .end((err, res) => {
+        if (err) done(err);
+        expect(res).to.have.status(ok);
+        expect(res.body).to.be.an('object');
+        expect(res.body).to.have.property('message');
+        expect(res.body.message).to.be.a('string');
+        expect(res.body.message).to.equal(passwordResetSuccess);
+        done();
+      });
+  });
+
+  it('Will reset password,', (done) => {
+    chai.request(server)
+      .patch(`/api/users/reset-password/${resetPasswordToken}`)
+      .send({ password: '1111111' })
+      .end((err, res) => {
+        if (err) done(err);
+        expect(res).to.have.status(badRequest);
+        expect(res.body).to.be.an('object');
+        expect(res.body).to.have.property('error');
+        expect(res.body.error).to.be.a('string');
+        expect(res.body.error).to.equal(passwordErr);
+        done();
+      });
+  });
+
+  it('Will not reset password, because we sent a fake token', (done) => {
+    chai.request(server)
+      .patch(`/api/users/reset-password/${fakeToken}`)
+      .send({ password: 'nezaMedia2@' })
+      .end((err, res) => {
+        if (err) done(err);
+        expect(res).to.have.status(badRequest);
+        expect(res.body).to.be.an('object');
+        expect(res.body).to.have.property('error');
+        expect(res.body.error).to.be.a('string');
+        expect(res.body.error).to.equal(resetPasswordLinkExpired);
         done();
       });
   });
