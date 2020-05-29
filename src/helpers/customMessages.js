@@ -28,6 +28,7 @@ export default {
     unVerifiedAccount: 'Your account is not verified yet, please check your email as soon as possible to verify it',
     emailOrUsernameRequired: 'Enter your email or your username',
     resetPasswordLinkExpired: 'The reset password link has been expired, please re-request for password reset',
+    tokenMissingOrInvalidErrorMsg: 'You are not authenticated, please login or signup',
   },
   successMessages: {
     signupSuccess: `Conglaturations, we are happy that you became a member of this global community,
