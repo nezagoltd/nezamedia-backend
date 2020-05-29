@@ -11,8 +11,13 @@ const {
   created, ok,
 } = statusCodes;
 const {
-  signupSuccess, emailVerificationSuccess, verificationEmailResentSuccess,
+  signupSuccess,
+  emailVerificationSuccess,
+  verificationEmailResentSuccess,
+  passwordResetRequestEmailSent,
 } = customMessages.successMessages;
+
+const { verificationEmail, passwordResetRequestEmail } = customMessages;
 
 /**
  * @description this class user controller will work with req, and response to interact with db
@@ -37,7 +42,7 @@ export default class UserController extends ResponseHandlers {
     const { dataValues } = await UserService.saveAll(req.body);
     const token = generateToken(dataValues);
     await EmailSenderHandlers
-      .sendEmailVerification(token, `${req.body.firstName} ${req.body.lastName}`, req.body.email);
+      .sendAnyEmail(token, `${req.body.firstName} ${req.body.lastName}`, req.body.email, verificationEmail);
     this.successResponse(this.res, created, signupSuccess, token, undefined);
   }
 
@@ -79,7 +84,25 @@ export default class UserController extends ResponseHandlers {
     const userToSend = _.omit(userRequestedResendVerificationEmail, 'password');
     const token = generateToken(userToSend);
     await EmailSenderHandlers
-      .sendEmailVerification(token, `${userToSend.firstName} ${userToSend.lastName}`, userToSend.email);
+      .sendAnyEmail(token, `${userToSend.firstName} ${userToSend.lastName}`, userToSend.email, verificationEmail);
     this.successResponse(this.res, ok, verificationEmailResentSuccess, undefined, undefined);
+  }
+
+  /**
+     * @param {object} req
+     * @param {object} res
+     * @method
+     * @returns {object} response to user
+     * @description it sends an authentication token to user if they are authenticated
+     */
+  passwordResetRequest = async (req, res) => {
+    this.res = res;
+    const { email } = req;
+    const userFormDb = await UserService.getOneBy({ email });
+    const userToSend = _.omit(userFormDb, 'password');
+    const token = generateToken(userToSend);
+    await EmailSenderHandlers
+      .sendAnyEmail(token, `${userToSend.firstName} ${userToSend.lastName}`, userToSend.email, passwordResetRequestEmail);
+    this.successResponse(this.res, ok, passwordResetRequestEmailSent, token, undefined);
   }
 }
