@@ -11,6 +11,7 @@ export default (sequelize, DataTypes) => {
     country: DataTypes.STRING,
     isVerified: DataTypes.BOOLEAN,
     provider: DataTypes.STRING,
+    socialMediaId: DataTypes.STRING,
   }, {
     paranoid: true,
   });

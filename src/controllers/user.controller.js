@@ -1,3 +1,4 @@
+/* eslint-disable camelcase */
 import _ from 'lodash';
 import UserService from '../services/user.service';
 import statusCodes from '../helpers/statusCodes';
@@ -71,6 +72,19 @@ export default class UserController extends ResponseHandlers {
     const { gottenUser } = req;
     const userToSend = _.omit(gottenUser, 'password');
     this.successResponse(this.res, ok, undefined, generateToken(userToSend), undefined);
+  }
+
+  /**
+     * @param {object} req
+     * @param {object} res
+     * @method
+     * @returns {object} response to user
+     * @description it sends an authentication token to user if they are authenticated
+     */
+  loginWithFacebook = async (req, res) => {
+    this.res = res;
+    console.log('callback fn called');
+    this.successResponse(this.res, ok, undefined, generateToken(req.user), undefined);
   }
 
   /**
