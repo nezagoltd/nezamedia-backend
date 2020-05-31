@@ -18,6 +18,60 @@ const {
   NEZAMEDIA_GOOGLE_CALLBACK_URL,
 } = process.env;
 
+/**
+ * @param{*} accessToken
+ * @param{*} refreshToken
+ * @param{*} user
+ * @param{*} cb
+ * @returns{*} user
+ */
+export const fcbkCallback = async (accessToken, refreshToken, user, cb) => {
+  const {
+    id, last_name, first_name, provider,
+  } = user;
+  const username = `${last_name}-${first_name}-${id}`;
+  const userToSave = {
+    socialMediaId: id,
+    username,
+    provider,
+    email: `${username}@nezamedia.neza`,
+    firstName: first_name,
+    lastName: last_name,
+    isVerified: true,
+  };
+  const savedUserInDb = await UserService.getOneOrCreateOne(userToSave, { socialMediaId: id });
+  const { dataValues } = savedUserInDb[0];
+  const userFromDb = dataValues;
+  return cb(null, userFromDb);
+};
+
+/**
+ * @param{*} request
+ * @param{*} accessToken
+ * @param{*} refreshToken
+ * @param{*} profile
+ * @param{*} cb
+ * @returns{*} user
+ */
+export const googleCallback = async (request, accessToken, refreshToken, profile, cb) => {
+  const {
+    id, email, given_name, family_name,
+  } = profile;
+  const userToSave = {
+    socialMediaId: id,
+    username: email,
+    provider: 'google',
+    email,
+    firstName: given_name,
+    lastName: family_name,
+    isVerified: true,
+  };
+  const savedUserInDb = await UserService.getOneOrCreateOne(userToSave, { socialMediaId: id });
+  const { dataValues } = savedUserInDb[0];
+  const userFromDb = dataValues;
+  return cb(null, userFromDb);
+};
+
 // facebook
 passport.use(new FacebookStrategy(
   {
@@ -26,25 +80,7 @@ passport.use(new FacebookStrategy(
     callbackURL: NEZAMEDIA_FCBK_CALLBACK_URL,
     profileFields: ['id', 'displayName', 'email', 'first_name', 'last_name'],
   },
-  async (accessToken, refreshToken, user, cb) => {
-    const {
-      id, last_name, first_name, provider,
-    } = user;
-    const username = `${last_name}-${first_name}-${id}`;
-    const userToSave = {
-      socialMediaId: id,
-      username,
-      provider,
-      email: `${username}@nezamedia.neza`,
-      firstName: first_name,
-      lastName: last_name,
-      isVerified: true,
-    };
-    const savedUserInDb = await UserService.getOneOrCreateOne(userToSave, { socialMediaId: id });
-    const { dataValues } = savedUserInDb[0];
-    const userFromDb = dataValues;
-    return cb(null, userFromDb);
-  },
+  fcbkCallback,
 ));
 
 //  google
@@ -56,24 +92,7 @@ passport.use(new GoogleStrategy(
     passReqToCallback: true,
     profileFields: ['id', 'displayName', 'email', 'given_name', 'family_name'],
   },
-  (async (request, accessToken, refreshToken, profile, cb) => {
-    const {
-      id, email, given_name, family_name,
-    } = profile;
-    const userToSave = {
-      socialMediaId: id,
-      username: email,
-      provider: 'google',
-      email,
-      firstName: given_name,
-      lastName: family_name,
-      isVerified: true,
-    };
-    const savedUserInDb = await UserService.getOneOrCreateOne(userToSave, { socialMediaId: id });
-    const { dataValues } = savedUserInDb[0];
-    const userFromDb = dataValues;
-    return cb(null, userFromDb);
-  }),
+  googleCallback,
 ));
 
 passport.serializeUser((user, done) => done(null, user));
