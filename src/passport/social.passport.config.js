@@ -4,6 +4,7 @@ import dotenv from 'dotenv';
 import facebookStrategy from 'passport-facebook';
 import googleStrategy from 'passport-google-oauth2';
 import UserService from '../services/user.service';
+import { generateToken } from '../helpers/tokenHandlers';
 
 dotenv.config();
 
@@ -42,7 +43,7 @@ export const fcbkCallback = async (accessToken, refreshToken, user, cb) => {
   const savedUserInDb = await UserService.getOneOrCreateOne(userToSave, { socialMediaId: id });
   const { dataValues } = savedUserInDb[0];
   const userFromDb = dataValues;
-  return cb(null, userFromDb);
+  return cb(null, generateToken(userFromDb));
 };
 
 /**
@@ -69,8 +70,12 @@ export const googleCallback = async (request, accessToken, refreshToken, profile
   const savedUserInDb = await UserService.getOneOrCreateOne(userToSave, { socialMediaId: id });
   const { dataValues } = savedUserInDb[0];
   const userFromDb = dataValues;
-  return cb(null, userFromDb);
+
+  return cb(null, generateToken(userFromDb));
 };
+
+passport.serializeUser((user, done) => done(null, user));
+passport.deserializeUser((obj, done) => done(null, obj));
 
 // facebook
 passport.use(new FacebookStrategy(
@@ -94,8 +99,5 @@ passport.use(new GoogleStrategy(
   },
   googleCallback,
 ));
-
-passport.serializeUser((user, done) => done(null, user));
-passport.deserializeUser((obj, done) => done(null, obj));
 
 export default passport;

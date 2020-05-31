@@ -34,7 +34,7 @@ userRouter.patch('/reset-password/:token', passwordUpdateValidate, passwordUpdat
 userRouter.get('/facebook', passport.authenticate('facebook'));
 userRouter.get('/login-facebook', passport.authenticate('facebook',
   {
-    session: false,
+    session: true,
     successRedirect: '/',
     failureRedirect: '/',
   }));
@@ -42,7 +42,7 @@ userRouter.get('/login-facebook', passport.authenticate('facebook',
 userRouter.get('/google', passport.authenticate('google', { scope: ['email', 'profile'] }));
 userRouter.get('/login-google', passport.authenticate('google', {
   scope: ['email', 'profile'],
-  session: false,
+  session: true,
   successRedirect: '/',
   failureRedirect: '/',
 }));
