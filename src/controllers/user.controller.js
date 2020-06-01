@@ -81,19 +81,6 @@ export default class UserController extends ResponseHandlers {
      * @returns {object} response to user
      * @description it sends an authentication token to user if they are authenticated
      */
-  loginWithFacebook = async (req, res) => {
-    this.res = res;
-    console.log('callback fn called');
-    this.successResponse(this.res, ok, undefined, generateToken(req.user), undefined);
-  }
-
-  /**
-     * @param {object} req
-     * @param {object} res
-     * @method
-     * @returns {object} response to user
-     * @description it sends an authentication token to user if they are authenticated
-     */
   resendVerificationEmail = async (req, res) => {
     this.res = res;
     const { userRequestedResendVerificationEmail } = req;
