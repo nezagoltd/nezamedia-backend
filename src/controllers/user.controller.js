@@ -1,3 +1,4 @@
+/* eslint-disable camelcase */
 import _ from 'lodash';
 import UserService from '../services/user.service';
 import statusCodes from '../helpers/statusCodes';

@@ -28,6 +28,21 @@ export default class CrudRepository {
   }
 
   /**
+   * @param{object} data
+   * @param{object} whereCondition
+   * @returns{object} userFromDb
+   * @description it tries to fin a user from db, if he/she does not exist, it creates hime/her
+   */
+  getOneOrCreateOne=async (data, whereCondition) => {
+    const tableFields = Object.keys(this.model.rawAttributes);
+    const acceptedSave = removeUnexpectedInput(tableFields, data);
+    const userFromDb = await this.model.findOrCreate({
+      defaults: acceptedSave, where: whereCondition,
+    });
+    return userFromDb;
+  }
+
+  /**
    * @param {object} whereCondition
    * @returns {object} foundRes
    * @method

@@ -68,3 +68,5 @@ Clone the Repo.
 | /users/resend-verification-email?email=requesterEmail | POST | 200 OK | Enables user to request resend verification email|
 | /users/reset-password-request?email=requesterEmail | POST | 200 OK | Enables user to request to reset the password|
 | /users/reset-password/:token | PATCH | 200 OK | Enables user to reset their password|
+| /users/login-google | GET | 200 OK | Enables user to login via their google accounts|
+| /users/login-facebook | GET | 200 OK | Enables user to login via their facebook accounts|
