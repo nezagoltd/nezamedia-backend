@@ -53,4 +53,19 @@ export default {
       password: 'NezaMedia1.',
     },
   },
+  passportData: {
+    googleUser: {
+      id: '220232cbgoogle',
+      email: 'googleuser@nezago.neza',
+      given_name: 'googleuser',
+      family_name: 'googleuser',
+    },
+    fcbkUser: {
+      id: '220232cbfcbk',
+      last_name: 'fcbkuser',
+      first_name: 'fcbkuser',
+      provider: 'facebook',
+    },
+
+  },
 };
