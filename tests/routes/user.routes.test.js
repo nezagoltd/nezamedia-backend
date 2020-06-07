@@ -479,4 +479,18 @@ describe('Logout tests', () => {
         done();
       });
   });
+  it('Will not logout because the token is invalid', (done) => {
+    chai.request(server)
+      .get('/api/users/logout')
+      .set('Authorization', `Bearer ${fakeToken}`)
+      .end((err, res) => {
+        if (err) done(err);
+        expect(res).to.have.status(unAuthorized);
+        expect(res.body).to.be.an('object');
+        expect(res.body).to.have.property('error');
+        expect(res.body.error).to.be.a('string');
+        expect(res.body.error).to.equal(tokenMissingOrInvalidErrorMsg);
+        done();
+      });
+  });
 });
