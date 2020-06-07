@@ -5,6 +5,9 @@ import server from '../../src/app';
 import customMessages from '../../src/helpers/customMessages';
 import statusCodes from '../../src/helpers/statusCodes';
 import mockData from '../data/userMockData';
+import taskScheduler from '../../src/database/redis/taskScheduler';
+import redisClient from '../../src/database/redis/redis.config';
+import BackgroundTasks from '../../src/database/redis/backgroundServices';
 
 chai.use(chaiHttp);
 
@@ -46,7 +49,8 @@ const {
 } = mockData.signupData;
 
 const { fakeToken } = mockData.verifyAccountData;
-
+const { expiredToken } = mockData;
+const { expiredTokenCleanUp } = BackgroundTasks;
 const { loginVerifiedAcc } = mockData.loginData;
 
 let userToken;
@@ -492,5 +496,17 @@ describe('Logout tests', () => {
         expect(res.body.error).to.equal(tokenMissingOrInvalidErrorMsg);
         done();
       });
+  });
+});
+
+describe('Testing cron jobs for background tasks (token)', () => {
+  it('Will start the scheduler', async () => {
+    taskScheduler.start();
+  });
+  before(() => {
+    redisClient.sadd('token', expiredToken);
+  });
+  it('Should remove expired tokens if any', async () => {
+    await expiredTokenCleanUp();
   });
 });
