@@ -439,3 +439,16 @@ describe('Reset Password tests', () => {
       });
   });
 });
+
+describe('Logout tests', () => {
+  it('Will logout a logged in user', (done) => {
+    chai.request(server)
+      .get('/api/users/logout')
+      .set('Authorization', `Bearer ${userToken}`)
+      .end((err, res) => {
+        if (err) done(err);
+        expect(res).to.have.status(ok);
+        done();
+      });
+  });
+});
