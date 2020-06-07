@@ -3,6 +3,7 @@ import ResponseHandlers from '../helpers/responseHandlers';
 import statusCodes from '../helpers/statusCodes';
 import customMessages from '../helpers/customMessages';
 import UserService from '../services/user.service';
+import redisClient from '../database/redis/redis.config';
 
 const { unAuthorized, forbidden } = statusCodes;
 const { tokenMissingOrInvalidErrorMsg, unVerifiedAccount } = customMessages.errorMessages;
@@ -39,15 +40,16 @@ class ValidateAuth extends ResponseHandlers {
       try {
         const decodedToken = verifyToken(token);
         const requestingUser = await UserService.getOneBy({ id: decodedToken.id });
-        if (requestingUser) {
-          const { dataValues } = requestingUser;
-          if (dataValues.isVerified) {
-            req.sessionUser = dataValues;
-            return next();
+        return redisClient.smembers('token', (err, userToken) => {
+          if (userToken.includes(token) || !requestingUser) {
+            return this.errorResponse(this.res, unAuthorized, tokenMissingOrInvalidErrorMsg);
           }
-          return this.errorResponse(this.res, forbidden, unVerifiedAccount);
-        }
-        return this.errorResponse(this.res, unAuthorized, tokenMissingOrInvalidErrorMsg);
+          if (!requestingUser.isVerified) {
+            return this.errorResponse(res, unAuthorized, unVerifiedAccount);
+          }
+          req.sessionUser = decodedToken;
+          return next();
+        });
       } catch (err) {
         return this.errorResponse(this.res, unAuthorized, tokenMissingOrInvalidErrorMsg);
       }
