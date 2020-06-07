@@ -66,6 +66,6 @@ export default {
       first_name: 'fcbkuser',
       provider: 'facebook',
     },
-
   },
+  expiredToken: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZmlyc3ROYW1lIjoiTVVHSVJBU0UiLCJsYXN0TmFtZSI6IkVtbWFudWVsIiwiZW1haWwiOiJlbW1hbXVnaXJhQGdtYWlsLmNvbSIsInVzZXJuYW1lIjoiZGVzY2hvbGFyIiwiYWdlIjoyNSwic2V4IjoibWFsZSIsImNpdHkiOiJraWdhbGkiLCJjb3VudHJ5IjoicndhbmRhIiwidXBkYXRlZEF0IjoiMjAyMC0wNi0wN1QwNjozMzo0OC4wMjJaIiwiY3JlYXRlZEF0IjoiMjAyMC0wNi0wN1QwNjozMzo0OC4wMjJaIiwiZGVsZXRlZEF0IjpudWxsLCJpc1ZlcmlmaWVkIjpmYWxzZSwicHJvdmlkZXIiOiJOZXphIE1lZGlhIiwic29jaWFsTWVkaWFJZCI6bnVsbCwiaWF0IjoxNTkxNTExNjI4LCJleHAiOjE1OTE1MTE3NDh9.uGa3KTwHRnHPS7xLjHGU6FzII4o6tCyNPStyI5ekxIs',
 };

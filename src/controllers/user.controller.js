@@ -7,6 +7,7 @@ import { generateToken } from '../helpers/tokenHandlers';
 import { hashPassword } from '../helpers/passwordHandlers';
 import customMessages from '../helpers/customMessages';
 import EmailSenderHandlers from '../helpers/emailSenderHandlers';
+import redisClient from '../database/redis/redis.config';
 
 const {
   created, ok,
@@ -123,7 +124,23 @@ export default class UserController extends ResponseHandlers {
     await UserService.updateOneBy({ password: hashPassword(newPassword) }, { id: userFromDb.id });
     const linkToLogin = '/api/users/login';
     await EmailSenderHandlers
-      .sendAnyEmail(linkToLogin, `${userFromDb.firstName} ${userFromDb.lastName}`, userFromDb.email, passwordResetSuccessEmail);
+      .sendAnyEmail(linkToLogin, `${userFromDb.firstName} ${userFromDb.lastName}`,
+        userFromDb.email, passwordResetSuccessEmail);
     this.successResponse(this.res, ok, passwordResetSuccess, undefined, undefined);
   }
+
+  /**
+     * @param {object} req
+     * @param {object} res
+     * @method
+     * @returns {object} response to user
+     * @description it sends an authentication token to user if they are logged out
+     */
+    userLogout = (req, res) => {
+      this.res = res;
+      const token = req.headers.authorization.split(' ')[1];
+      redisClient.sadd('token', token);
+      req.session = null;
+      this.successResponse(this.res, ok, undefined, undefined, undefined);
+    }
 }

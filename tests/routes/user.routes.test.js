@@ -5,6 +5,9 @@ import server from '../../src/app';
 import customMessages from '../../src/helpers/customMessages';
 import statusCodes from '../../src/helpers/statusCodes';
 import mockData from '../data/userMockData';
+import taskScheduler from '../../src/database/redis/taskScheduler';
+import redisClient from '../../src/database/redis/redis.config';
+import BackgroundTasks from '../../src/database/redis/backgroundServices';
 
 chai.use(chaiHttp);
 
@@ -36,6 +39,7 @@ const {
   emailOrUsernameRequired,
   resetPasswordLinkExpired,
   passwordErr,
+  tokenMissingOrInvalidErrorMsg,
 } = customMessages.errorMessages;
 const {
   signupValidData,
@@ -45,11 +49,13 @@ const {
 } = mockData.signupData;
 
 const { fakeToken } = mockData.verifyAccountData;
-
+const { expiredToken } = mockData;
+const { expiredTokenCleanUp } = BackgroundTasks;
 const { loginVerifiedAcc } = mockData.loginData;
 
 let userToken;
 let resetPasswordToken;
+let tokenNotVerifiedAccount;
 
 describe('Signup tests', () => {
   it('Will create a new user, expect it to return an object with status code of 201, and response body containing a token', (done) => {
@@ -69,6 +75,7 @@ describe('Signup tests', () => {
         done();
       });
   });
+
   it('Will create a new user when we send some unneccessary data, expect it to return an object with status code of 201, and response body containing a token', (done) => {
     chai.request(server)
       .post('/api/users/signup')
@@ -76,6 +83,7 @@ describe('Signup tests', () => {
       .send(signupValidDataWithUnnecessaryData)
       .end((err, res) => {
         if (err) done(err);
+        tokenNotVerifiedAccount = res.body.token;
         expect(res).to.have.status(created);
         expect(res.body).to.be.an('object');
         expect(res.body).to.have.property('token').to.be.a('string');
@@ -437,5 +445,85 @@ describe('Reset Password tests', () => {
         expect(res.body.error).to.equal(resetPasswordLinkExpired);
         done();
       });
+  });
+});
+
+describe('Logout tests', () => {
+  it('Will logout a logged in user', (done) => {
+    chai.request(server)
+      .get('/api/users/logout')
+      .set('Authorization', `Bearer ${userToken}`)
+      .end((err, res) => {
+        if (err) done(err);
+        expect(res).to.have.status(ok);
+        done();
+      });
+  });
+  it('Will not logout a user, because the token sent is already logged out', (done) => {
+    chai.request(server)
+      .get('/api/users/logout')
+      .set('Authorization', `Bearer ${userToken}`)
+      .end((err, res) => {
+        if (err) done(err);
+        expect(res).to.have.status(unAuthorized);
+        expect(res.body).to.be.an('object');
+        expect(res.body).to.have.property('error');
+        expect(res.body.error).to.be.a('string');
+        expect(res.body.error).to.equal(tokenMissingOrInvalidErrorMsg);
+        done();
+      });
+  });
+  it('Will not logout because there is no token sent', (done) => {
+    chai.request(server)
+      .get('/api/users/logout')
+      .end((err, res) => {
+        if (err) done(err);
+        expect(res).to.have.status(unAuthorized);
+        expect(res.body).to.be.an('object');
+        expect(res.body).to.have.property('error');
+        expect(res.body.error).to.be.a('string');
+        expect(res.body.error).to.equal(tokenMissingOrInvalidErrorMsg);
+        done();
+      });
+  });
+  it('Will not logout because the token is invalid', (done) => {
+    chai.request(server)
+      .get('/api/users/logout')
+      .set('Authorization', `Bearer ${fakeToken}`)
+      .end((err, res) => {
+        if (err) done(err);
+        expect(res).to.have.status(unAuthorized);
+        expect(res.body).to.be.an('object');
+        expect(res.body).to.have.property('error');
+        expect(res.body.error).to.be.a('string');
+        expect(res.body.error).to.equal(tokenMissingOrInvalidErrorMsg);
+        done();
+      });
+  });
+  it('Will not logout because the account is not verified', (done) => {
+    chai.request(server)
+      .get('/api/users/logout')
+      .set('Authorization', `Bearer ${tokenNotVerifiedAccount}`)
+      .end((err, res) => {
+        if (err) done(err);
+        expect(res).to.have.status(unAuthorized);
+        expect(res.body).to.be.an('object');
+        expect(res.body).to.have.property('error');
+        expect(res.body.error).to.be.a('string');
+        expect(res.body.error).to.equal(unVerifiedAccount);
+        done();
+      });
+  });
+});
+
+describe('Testing cron jobs for background tasks (token)', () => {
+  it('Will start the scheduler', async () => {
+    taskScheduler.start();
+  });
+  before(() => {
+    redisClient.sadd('token', expiredToken);
+  });
+  it('Should remove expired tokens if any', async () => {
+    await expiredTokenCleanUp();
   });
 });
