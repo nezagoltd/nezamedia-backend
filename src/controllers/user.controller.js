@@ -137,8 +137,10 @@ export default class UserController extends ResponseHandlers {
      * @description it sends an authentication token to user if they are logged out
      */
     userLogout = (req, res) => {
+      this.res = res;
       const token = req.headers.authorization.split(' ')[1];
       redisClient.sadd('token', token);
+      req.session = null;
       this.successResponse(this.res, ok, undefined, undefined, undefined);
     }
 }
