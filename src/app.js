@@ -4,7 +4,7 @@ import morgan from 'morgan';
 import cookieSession from 'cookie-session';
 import passport from './passport/social.passport.config';
 import allRoutes from './routes/index';
-import nezamediaScheduler from './database/redis/taskerScheduler';
+import nezamediaScheduler from './database/redis/taskScheduler';
 
 dotenv.config();
 
