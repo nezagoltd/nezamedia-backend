@@ -452,7 +452,7 @@ describe('Logout tests', () => {
         done();
       });
   });
-  it('Will logout a logged in user', (done) => {
+  it('Will not logout a user, because the token sent is already logged out', (done) => {
     chai.request(server)
       .get('/api/users/logout')
       .set('Authorization', `Bearer ${userToken}`)
@@ -462,7 +462,7 @@ describe('Logout tests', () => {
         expect(res.body).to.be.an('object');
         expect(res.body).to.have.property('error');
         expect(res.body.error).to.be.a('string');
-        expect(res.body.error).to.equal.a(tokenMissingOrInvalidErrorMsg);
+        expect(res.body.error).to.equal(tokenMissingOrInvalidErrorMsg);
         done();
       });
   });
